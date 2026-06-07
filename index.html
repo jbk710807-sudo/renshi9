@@ -62,11 +62,12 @@
     ];
     const oSel = document.getElementById('selOffice');
     const hSel = document.getElementById('selHome');
-   if (oSel && hSel) {
-    options.forEach(o => {
-        oSel.add(new Option(o.text, o.val));
-        hSel.add(new Option(o.text, o.dVal));
-    });
+    if (oSel && hSel) {
+        options.forEach(o => {
+            oSel.add(new Option(o.text, o.val));
+            hSel.add(new Option(o.text, o.dVal));
+        });
+    }
     function makeGrid(elementId, targetGong, tagClass, tagText) {
         const container = document.getElementById(elementId);
         if (!container) return;
@@ -85,7 +86,7 @@
             container.appendChild(cell);
         });
     }
-    function setTimeout(render, 500);
+    function render() {
         const oTarget = oSel.value;
         const hTarget = hSel.value;
         makeGrid('officeGrid', oTarget, 'seat', '💺 您的座位');
@@ -94,4 +95,16 @@
         const hTxt = document.getElementById('hTxt');
         if(oTxt) {
             oTxt.innerText = bazhai[oTarget] === 'ji' 
-                ? `您的辦公座位落在【${oTarget}吉方】。本月利於精準思考，右手邊放一杯水能
+                ? `您的辦公座位落在【${oTarget}吉方】。本月利於精準思考，右手邊放一杯水能加速催旺財運。`
+                : `您的座位在【${oTarget}凶方】。請在辦公桌的「正西」、「西南」或「東北」這三個吉利方位擺放筆電或重要合約化煞。`;
+        }
+        if(hTxt) {
+            hTxt.innerText = bazhai[hTarget] === 'ji' 
+                ? `住宅大門開在【${hTarget}吉方】，納入財氣。本月請保持玄關燈火明亮，大幅催旺貴人運。`
+                : `住宅大門開在【${hTarget}凶方】。玄關切勿堆放雜物，門口建議加鋪一張深藍色或黑色地墊化解煞氣。`;
+        }
+    }
+    setTimeout(render, 500);
+</script>
+</body>
+</html>
