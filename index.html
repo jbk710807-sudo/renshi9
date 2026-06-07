@@ -3,108 +3,351 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>壬水九號・食神空間盤</title>
+    <title>壬水九號・專屬八字空間決策盤</title>
     <style>
         :root { --bg: #030508; --card: #080d16; --gold: #ffd154; --text: #ffffff; --muted: #879fb9; --border: #141b29; --ji: #00e676; --xiong: #ff3333; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
         body { background: var(--bg); color: var(--text); padding: 16px; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 440px; }
-        .header { text-align: center; padding: 15px 0; border-bottom: 1px solid var(--border); color: var(--gold); font-size: 18px; font-weight: bold; }
-        .card { background: linear-gradient(135deg, #0e1726, #040810); border: 1px solid var(--gold); border-radius: 14px; padding: 16px; margin: 16px 0; font-size: 14px; line-height: 1.7; }
-        .select-style { width: 100%; background: #101726 !important; border: 1px solid var(--gold) !important; color: #ffffff !important; padding: 12px; border-radius: 8px; font-weight: bold; margin: 8px 0 20px 0; font-size: 14px; display: block; }
-        .select-style option { background-color: #101726 !important; color: #ffffff !important; }
-        .grid-title { font-size: 13px; color: var(--gold); text-align: center; margin-bottom: 8px; font-weight: bold; }
-        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; background: #04070c; padding: 10px; border-radius: 12px; border: 1px solid #1f2c42; margin-bottom: 24px; min-height: 100px; }
-        .cell { background: #101726; aspect-ratio: 1; border-radius: 8px; display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 11px; font-weight: bold; border: 1px solid var(--border); position: relative; color: #fff; }
+        .container { width: 100%; max-width: 500px; }
+        .header { text-align: center; padding: 20px 0; border-bottom: 2px solid var(--gold); color: var(--gold); font-size: 22px; font-weight: bold; letter-spacing: 1px; }
+        .section-title { font-size: 16px; color: var(--gold); margin: 24px 0 12px 0; font-weight: bold; border-left: 4px solid var(--gold); padding-left: 8px; }
+        .card { background: linear-gradient(135deg, #0e1726, #040810); border: 1px solid #1f2c42; border-radius: 14px; padding: 18px; margin: 12px 0; font-size: 14px; line-height: 1.7; }
+        .row { display: flex; gap: 10px; margin-bottom: 12px; }
+        .col { flex: 1; display: flex; flex-direction: column; }
+        label { font-size: 12px; color: var(--muted); margin-bottom: 4px; font-weight: bold; }
+        select, input { width: 100%; background: #101726; border: 1px solid var(--gold); color: #ffffff; padding: 10px; border-radius: 6px; font-size: 14px; }
+        .btn { background: var(--gold); color: #000; font-weight: bold; width: 100%; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; margin-top: 10px; }
+        .btn:hover { background: #e0b843; }
+        .bazi-table { width: 100%; border-collapse: collapse; margin: 15px 0; text-align: center; }
+        .bazi-table th, .bazi-table td { border: 1px solid #1f2c42; padding: 10px; font-size: 14px; }
+        .bazi-table th { background: #101726; color: var(--gold); }
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; background: #04070c; padding: 10px; border-radius: 12px; border: 1px solid #1f2c42; margin-bottom: 16px; }
+        .cell { background: #101726; aspect-ratio: 1; border-radius: 8px; display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 12px; font-weight: bold; border: 1px solid var(--border); position: relative; padding: 4px; text-align: center; }
         .cell.ji { border: 1px solid var(--ji); color: var(--ji); background: rgba(0,230,118,0.05); }
         .cell.xiong { border: 1px solid var(--xiong); color: var(--xiong); background: rgba(255,51,51,0.05); }
-        .tag { position: absolute; bottom: 4px; font-size: 10px; padding: 2px 4px; border-radius: 4px; color: #000; font-weight: bold; width: 90%; text-align: center; }
-        .tag.seat { background: #00b0ff; color: #fff; }
-        .tag.door { background: #ff9100; color: #fff; }
-        .tips-box { background: #0a111e; padding: 14px; border-radius: 8px; border-left: 4px solid var(--gold); margin-top: 12px; font-size: 13px; line-height: 1.6; }
+        .cell-star { font-size: 11px; color: #fff; margin-top: 4px; background: rgba(255,255,255,0.1); padding: 2px 4px; border-radius: 4px; }
+        .analysis-box { background: #0a111e; padding: 14px; border-radius: 8px; border-left: 4px solid var(--gold); margin-top: 12px; font-size: 13px; line-height: 1.6; color: #e1e7ed; }
+        .analysis-box strong { color: var(--gold); }
     </style>
 </head>
 <body>
 <div class="container">
-    <div class="header">👑 壬水九號・食神生財空間決策盤</div>
+    <div class="header">👑 壬水九號・專屬八字空間決策盤</div>
+    
+    <div class="section-title">🔮 第一步：輸入個人本命八字四柱資訊</div>
     <div class="card">
-        <span style="color:var(--gold); font-size:16px; font-weight:bold;">🍀 甲午流月・食神生財運勢 (6/5 - 7/7)</span><br><br>
-        <strong>【天時氣場解析】</strong><br>
-        壬水日主見甲木為<strong>「食神」</strong>，見午火為<strong>「正財」</strong>。本月由「芒種」節氣管轄，是標準的食神生財氣場！才華橫溢、大腦靈感湧現，非常有利於規劃新項目與合作。<br><br>
-        <strong>⚠️ 注意：</strong>地支午午自刑，內心容易糾結。本系統將透過空間磁場調校，把點子變現！
+        <div class="row">
+            <div class="col">
+                <label>您的日主五行</label>
+                <select id="riZhu">
+                    <option value="壬水">壬水 (陽水)</option>
+                    <option value="癸水">癸水 (陰水)</option>
+                    <option value="甲木">甲木 (陽木)</option>
+                    <option value="乙木">乙木 (陰木)</option>
+                    <option value="丙火">丙火 (陽火)</option>
+                    <option value="丁火">丁火 (陰火)</option>
+                    <option value="戊土">戊土 (陽土)</option>
+                    <option value="己土">己土 (陰土)</option>
+                    <option value="庚金">庚金 (陽金)</option>
+                    <option value="辛金">辛金 (陰金)</option>
+                </select>
+            </div>
+            <div class="col">
+                <label>配偶宮 (日支)</label>
+                <select id="riZhi">
+                    <option value="子">子水</option><option value="丑">丑土</option><option value="寅">寅木</option>
+                    <option value="卯">卯木</option><option value="辰">辰土</option><option value="巳">巳火</option>
+                    <option value="午">午火</option><option value="未">未土</option><option value="申">申金</option>
+                    <option value="酉">酉金</option><option value="戌">戌土</option><option value="亥">亥水</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col">
+                <label>年柱天干十神</label>
+                <select id="nianTen"><option value="比肩">比肩</option><option value="劫財">劫財</option><option value="食神">食神</option><option value="傷官">傷官</option><option value="正財">正財</option><option value="偏財">偏財</option><option value="正官">正官</option><option value="七殺">七殺</option><option value="正印">正印</option><option value="偏印">偏印</option></select>
+            </div>
+            <div class="col">
+                <label>月柱天干十神</label>
+                <select id="yueTen"><option value="正財" selected>正財</option><option value="比肩">比肩</option><option value="劫財">劫財</option><option value="食神">食神</option><option value="傷官">傷官</option><option value="偏財">偏財</option><option value="正官">正官</option><option value="七殺">七殺</option><option value="正印">正印</option><option value="偏印">偏印</option></select>
+            </div>
+            <div class="col">
+                <label>時柱天干十神</label>
+                <select id="shiTen"><option value="正財" selected>正財</option><option value="比肩">比肩</option><option value="劫財">劫財</option><option value="食神">食神</option><option value="傷官">傷官</option><option value="偏財">偏財</option><option value="正官">正官</option><option value="七殺">七殺</option><option value="正印">正印</option><option value="偏印">偏印</option></select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <label>年支</label>
+                <select id="nianZhi"><option value="子">子</option><option value="丑">丑</option><option value="寅">寅</option><option value="卯">卯</option><option value="辰">辰</option><option value="巳">巳</option><option value="午">午</option><option value="未">未</option><option value="申">申</option><option value="酉">酉</option><option value="戌">戌</option><option value="亥">亥</option></select>
+            </div>
+            <div class="col">
+                <label>月支</label>
+                <select id="yueZhi"><option value="子">子</option><option value="丑">丑</option><option value="寅">寅</option><option value="卯">卯</option><option value="辰">辰</option><option value="巳">巳</option><option value="午">午</option><option value="未">未</option><option value="申">申</option><option value="酉">酉</option><option value="戌">戌</option><option value="亥">亥</option></select>
+            </div>
+            <div class="col">
+                <label>時支</label>
+                <select id="shiZhi"><option value="子">子</option><option value="丑">丑</option><option value="寅">寅</option><option value="卯">卯</option><option value="辰">辰</option><option value="巳">巳</option><option value="午">午</option><option value="未">未</option><option value="申">申</option><option value="酉">酉</option><option value="戌">戌</option><option value="亥">亥</option></select>
+            </div>
+        </div>
     </div>
-    <label style="font-size:13px; color: var(--muted); font-weight:bold;">💼 職場佈局：選擇您的【辦公桌】坐向</label>
-    <select id="selOffice" class="select-style" onchange="render()"></select>
-    <div class="grid-title">💼 辦公室八宅吉凶空間（上南下北）</div>
-    <div id="officeGrid" class="grid"></div>
-    <label style="font-size:13px; color: var(--muted); font-weight:bold;">🛌 居家防禦：選擇您的【住宅大門】開向</label>
-    <select id="selHome" class="select-style" onchange="render()"></select>
-    <div class="grid-title">🛌 居家住宅八宅吉凶空間（上南下北）</div>
-    <div id="homeGrid" class="grid"></div>
-    <div class="card" style="border: 1px solid var(--border);">
-        <span style="color:var(--gold); font-size:15px; font-weight:bold;">🎯 本月空間開運處方籤</span>
-        <div class="tips-box"><strong>💻 辦公桌方位：</strong><span id="oTxt"></span></div>
-        <div class="tips-box"><strong>🏡 住宅大門防禦：</strong><span id="hTxt"></span></div>
+
+    <div class="section-title">🏡 第二步：輸入陽宅主人命卦資料</div>
+    <div class="card">
+        <div class="row">
+            <div class="col">
+                <label>出生西元年 (如 1988)</label>
+                <input type="number" id="birthYear" value="1988" min="1900" max="2030">
+            </div>
+            <div class="col">
+                <label>性別</label>
+                <select id="gender">
+                    <option value="男">男主人</option>
+                    <option value="女">女主人</option>
+                </select>
+            </div>
+        </div>
+        <button class="btn" onclick="processAll()">🚀 開始深度本命排盤與空間佈局</button>
+    </div>
+
+    <div class="section-title">📊 第三步：八字專屬格局與命理深度詳解報告</div>
+    <div class="card">
+        <table class="bazi-table">
+            <tr>
+                <th>時柱</th><th>日柱 (元神)</th><th>月柱</th><th>年柱</th>
+            </tr>
+            <tr>
+                <td id="tShiTen">-</td><td>日主 (主星)</td><td id="tYueTen">-</td><td id="tNianTen">-</td>
+            </tr>
+            <tr>
+                <td id="tShiZhi">-</td><td id="tRiZhu" style="color:var(--gold); font-weight:bold;">-</td><td id="tYueZhi">-</td><td id="tNianZhi">-</td>
+            </tr>
+        </table>
+        
+        <div class="analysis-box">
+            <strong>【日主元神特性分析】</strong>
+            <div id="riZhuAnalysis">請點擊上方按鈕生成專屬報告。</div>
+        </div>
+        <div class="analysis-box">
+            <strong>【四柱天干十神寓意】</strong>
+            <div id="tenShenAnalysis">尚未分析。</div>
+        </div>
+        <div class="analysis-box">
+            <strong>【地支衝合害局與宮位診斷】</strong>
+            <div id="zhiAnalysis">尚未分析。</div>
+        </div>
+        <div class="analysis-box">
+            <strong>【婚姻宮與配偶個性感情深度解讀】</strong>
+            <div id="spouseAnalysis">尚未分析。</div>
+        </div>
+    </div>
+
+    <div class="section-title">🧭 第四步：專屬本命東西四命陽宅九宮佈局（上南下北）</div>
+    <div class="card">
+        <div style="text-align: center; margin-bottom: 12px; font-weight: bold; color: var(--gold);" id="mingGuaTxt">您的本命卦：-</div>
+        <div id="homeGrid" class="grid"></div>
+        <div class="analysis-box">
+            <strong>🛠️ 本命卦四吉方與四凶方開運指南：</strong>
+            <div id="guaLayoutAnalysis">請先生成報告以獲取詳細佈局註解。</div>
+        </div>
     </div>
 </div>
+
 <script>
-    const bazhai = {"巽(東南)":"xiong", "離(正南)":"xiong", "坤(西南)":"ji", "震(正東)":"xiong", "中宮":"normal", "兌(正西)":"ji", "艮(東北)":"ji", "坎(正北)":"xiong", "乾(西北)":"ji"};
-    const layout = ["巽(東南)", "離(正南)", "坤(西南)", "震(正東)", "中宮", "兌(正西)", "艮(東北)", "坎(正北)", "乾(西北)"];
-    const options = [
-        {text:"坐午向子 (坐南朝北) — 椅子靠南牆", val:"離(正南)", dVal:"坎(正北)"},
-        {text:"坐子向午 (坐北朝南) — 椅子靠北牆", val:"坎(正北)", dVal:"離(正南)"},
-        {text:"坐酉向卯 (坐西朝東) — 椅子靠西牆", val:"兌(正西)", dVal:"震(正東)"},
-        {text:"坐卯向酉 (坐東朝西) — 椅子靠東牆", val:"震(正東)", dVal:"兌(正西)"},
-        {text:"坐巽向乾 (坐東南朝西北)", val:"巽(東南)", dVal:"乾(西北)"},
-        {text:"坐乾向巽 (坐西北朝東南)", val:"乾(西北)", dVal:"巽(東南)"},
-        {text:"坐艮向坤 (坐東北朝西南)", val:"艮(東北)", dVal:"坤(西南)"},
-        {text:"坐坤向艮 (坐西南朝東北)", val:"坤(西南)", dVal:"艮(東北)"}
+    // 1. 日主特性秘籍
+    const riZhuText = {
+        "壬水": "您為【壬水】日主，屬陽水。壬水為江河奔騰之水，胸懷寬廣、智慧非凡、極具點子與變通能力，具備強大的開創格局，能包容萬物，但有時性格較為急躁或任性。",
+        "癸水": "您為【癸水】日主，屬陰水。癸水為雨露滋潤之水，心思細密、感性內斂、直覺力與洞察力極強，善於和諧協調，但有時容易多愁善感、流於空想。",
+        "甲木": "您為【甲木】日主，屬陽木。如參天大樹，正直仁慈、積極向上、領導慾與責任感強，但性格過於剛直，易折不彎，缺乏圓滑度。",
+        "乙木": "您為【乙木】日主，屬陰木。如藤蔓花草，身段柔軟、適應力極強、善於借力使力、富審美觀，但內心較為脆弱，易依賴他人。",
+        "丙火": "您為【丙火】日主，屬陽火。如烈日驕陽，熱情洋溢、開朗大方、直爽且富有正義感，但性子急躁、喜流於表面，缺乏耐性。",
+        "丁火": "您為【丁火】日主，屬陰火。如燈燭繁星，外靜內熱、心思細膩、具奉獻精神與敏銳直覺，但多疑且容易敏感糾結。",
+        "戊土": "您為【戊土】日主，屬陽土。如高山厚土，沉穩厚重、講信用、守本分且極具包容力，但性格較為固執、缺乏浪漫與變通能力。",
+        "己土": "您為【己土】日主，屬陰土。如田園熟土，包容力極大、多才多藝、善於策劃且富有同情心，但容易流於優柔寡斷。",
+        "庚金": "您為【庚金】日主，屬陽金。如刀劍鋼鐵，剛毅果斷、講義氣、重名譽且執行力驚人，但破壞力強、性格過於粗獷直接。",
+        "辛金": "您為【辛金】日主，屬陰金。如珠寶金飾，精緻溫潤、追求完美、自尊心極強且具備獨特才華，但經不起磨難，略顯嬌氣。"
+    };
+
+    // 2. 十神位置秘籍
+    const tenShenText = {
+        "比肩": { "年": "【年柱帶比肩】：代表出身普通，少時獨立、喜自由。與父親緣分較薄，凡事需靠自身白手起家，難享祖業陰騭。", "月": "【月柱帶比肩】：自我意識強烈，做事有主見且不服輸。理財上易有爭財、破財現象，不宜與親友合夥開公司。", "時": "【時柱帶比肩】：子女獨立性強，晚年依舊展現出不服輸的性格。需多注意與子女在觀念上的溝通，防晚年財產爭奪。" },
+        "劫財": { "年": "【年柱帶劫財】：祖業緣薄，少年時期家境容易面臨變故或財產耗損。自尊心強，與同輩競爭激烈。", "月": "【月柱帶劫財】：個性外向但內心固執，花錢大方、仗義疏財，但一生容易遇到小人劫財，切忌為他人做保。", "時": "【時柱帶劫財】：晚年財產容易外流，子女花費大或較具叛逆性。晚年需將現金牢牢掌握在自己手中，以保安穩。" },
+        "食神": { "年": "【年柱帶食神】：祖上多為殷實、福澤深厚之家。少年時期平安順遂、衣食無憂，能得長輩寵愛與庇蔭。", "月": "【月柱帶食神】：若無梟神奪食，一生福祿雙全，財源豐沛。性格溫和寬厚，具備高度審美、藝術才華與口福。", "時": "【時柱帶食神】：晚年福祿綿長，子女賢孝有成，自身衣食無憂。能得享安逸安詳的晚年，身體健康。" },
+        "傷官": { "年": "【年柱帶傷官】：祖業容易在中途衰落，少年時期生活多有波折。性格較為叛逆，容易與父母或長輩產生代溝。", "月": "【月柱帶傷官】：聰明絕頂但鋒芒太露，說話直接易得罪人。女命需多加注意婚姻感情經營，男命則多能展現才華。", "時": "【時柱帶傷官】：晚年想法多、不易滿足。子女較具主見與叛逆心，容易操心子女事務，須防晚年晚節不保。" },
+        "正財": { "年": "【年柱帶正財】：出身富裕或祖上為讀書、經商門閥。少年時期能得良好教育環境與祖產資助，根基扎實。", "月": "【月柱帶正財】：為人勤儉持家、做事腳踏實地。月柱為最旺之宮位，中年時期事業必定穩定發達，財運亨通。", "時": "【時柱帶正財】：晚年財運極佳，能給子女留下豐厚家產，或子女本身極具賺錢能力。越老越有錢，屬老來發達之命。" },
+        "偏財": { "年": "【年柱帶偏財】：祖輩多為異鄉發跡之商人。自身少年時期出外發展機緣多，與父親感情好，有機率繼承外財。", "月": "【月柱帶偏財】：具有卓越的商業眼光與投資手腕。善於運用人脈賺取大筆流動性財富，不喜固定死薪水。", "時": "【時柱帶偏財】：晚年常有意外之財、橫財或投資暴利的機緣。子女多出外經商發達，晚年生活多采多姿。" },
+        "正官": { "年": "【年柱帶正官】：多出身於書香門第或官宦世家。身為家中長子或行為舉止穩重，年少時期便容易展露頭角。", "月": "【月柱帶正官】：做事正派、光明磊落、極重名譽與紀律。適合在大型企業或公職發展，中年時期掌握實權。", "時": "Icon【時柱帶正官】：子女賢孝、多能光宗耀祖。晚年享有崇高的社會地位與名望，深受晚輩與下屬敬重。" },
+        "七殺": { "年": "【年柱帶七殺】：少年時期身體多病、家境坎坷，或受長輩管教過於嚴苛。成年後多能鍛鍊出剛毅不屈的鬥志。", "月": "【月柱帶七殺】：性格剛強急躁、有俠義心腸與驚人魄力。中年事業大起大落，若有食神制殺，必能大權獨攬。", "時": "【時柱帶七殺】：晚年性格依舊剛烈威嚴。子女發展多具威勢，但須防自身因過度操勞而引發突發性健康問題。" },
+        "正印": { "年": "【年柱帶正印】：出身書香或名門望族。年少時深得父母與長輩寵愛，學業優秀，一生貴人運極強，逢凶化吉。", "月": "【月柱帶正印】：心慈面軟、好學不倦、喜精神追求。中年時期事業多因貴人提攜或專業名聲而穩步向上。", "時": "【時柱帶正印】：晚年生活安逸、德高望重。子女多為文人墨客或從事穩定公職，自身晚年注重養生與修行。" },
+        "偏印": { "年": "【年柱帶偏印】：年少時期較難得到生母的悉心照顧，或祖業凋零。性格較為孤僻冷靜，但領悟力異於常人。", "月": "【月柱帶偏印】：精明幹練、洞察力驚人，常能涉足冷門行業發跡。內心多疑且略顯孤傲，不易對旁人交心。", "時": "【時柱帶偏印】：晚年喜研究玄學、醫學或宗教。性格孤獨，須注意調和與子女的相處模式，防梟神奪食之憂。" }
+    };
+
+    // 3. 配偶宮（日支）秘籍
+    const spouseText = {
+        "子": "另一半多聰明機智、身材勻稱且極具才華魅力，夫妻間注重精神交流，但內心多情、須防感情泛濫。",
+        "丑": "另一半性格沉穩踏實、任勞任怨、處事極具原則，雖不浪漫但絕對可靠，唯獨性格有時過於固執、木訥。",
+        "寅": "另一半內心仁慈、極具開創能力、行動力驚人，夫妻間感情火熱，但對方脾氣較大，在家中喜居領導地位。",
+        "卯": "另一半長相清秀體貼、極具審美觀與女人緣/男人緣，心思細密、依賴心較重，彼此感情甜蜜如膠似漆。",
+        "辰": "另一半深藏不露、城府或自我防衛心較重、極具賺錢企圖心。夫妻生活多能在物質上互助，但言語易有摩擦。",
+        "巳": "另一半聰明伶俐、思想敏捷、擅長人際應酬。彼此互動多采多姿，但對方情緒起伏快，須多加包容。",
+        "午": "另一半熱情奔放、樂觀開朗且身材多半健美，人緣極佳。對您付出大方，唯獨性子急躁、缺乏耐性。",
+        "未": "另一半個性溫和内斂、肯吃苦耐勞且極度重視家庭。雖然外表樸素，但極具責任感，是安定家庭的定海神針。",
+        "申": "另一半精明幹練、言辭犀利且極具骨氣與執行力。生活中能為您提供實際決策建議，但有時管制欲過強。",
+        "酉": "另一半自尊心極強、外表出眾且非常在乎自身形象，才華洋溢。重視生活情調，但口舌爭執在所難免。",
+        "戌": "另一半性格忠誠可靠、嫉惡如仇，做事一板一眼。能共同建立穩定家業，但對方性格保守、不解風情。",
+        "亥": "另一半溫和善良、極具包容心與智慧，財運不俗。彼此相處如同摯友，但須注意對方有時過於安於現狀。"
+    };
+
+    // 4. 地支衝合害局關係庫
+    const zhiRelations = [
+        { keys: ["子", "午"], name: "子午相衝", desc: "主一生水火交戰，情緒起伏劇烈，需提防心血管、腎臟疾患，人際多波折。" },
+        { keys: ["丑", "未"], name: "丑未相衝", desc: "主因財產、土地或同輩利益引發糾結與衝突，事多阻礙，內心多悶氣。" },
+        { keys: ["寅", "申"], name: "寅申相衝", desc: "主驛馬交衝，一生多奔波勞碌、多走動、居所頻繁變動，且需嚴防手腳筋骨受創。" },
+        { keys: ["卯", "酉"], name: "卯酉相衝", desc: "主地域或感情犯桃花之衝，人際關係易遭背叛，且需防肝膽或筋骨問題。" },
+        { keys: ["辰", "戌"], name: "辰戌相衝", desc: "主土氣激盪，朋輩或事業多競爭、多官非口舌，亦主求財多有波折阻礙。" },
+        { keys: ["巳", "亥"], name: "巳亥相衝", desc: "主心靈與驛馬之衝，心思多變、喜涉足玄學宗教，出門需提防車馬之險。" },
+        { keys: ["寅", "亥"], name: "寅亥六合", desc: "主能化解戾氣，催生貴人助力，代表事業、人際多得長輩或暗中相助。" },
+        { keys: ["卯", "戌"], name: "卯戌六合", desc: "主化火之合，人緣極佳，容易得異性或同輩暗中鼎力支持、和諧共贏。" },
+        { keys: ["辰", "酉"], name: "辰酉六合", desc: "主化金之合，能增強自身的財運、話語權與決策執行力，多得貴人提攜。" },
+        { keys: ["巳", "申"], name: "巳申六合/刑", desc: "主先合後刑，合作或感情初期融洽，但後期容易因為利益分配產生口舌不和。" },
+        { keys: ["午", "未"], name: "午未六合", desc: "主日趨和諧，磁場交融，凡事多能得天時地利之便，化險為夷。" },
+        { keys: ["子", "丑"], name: "子丑六合", desc: "主沉穩相合，暗中得長輩、長官之提攜，基礎穩固，利於求名求財。" }
     ];
-    const oSel = document.getElementById('selOffice');
-    const hSel = document.getElementById('selHome');
-    if (oSel && hSel) {
-        options.forEach(o => {
-            oSel.add(new Option(o.text, o.val));
-            hSel.add(new Option(o.text, o.dVal));
-        });
+
+    // 5. 陽宅東西四命遊星配置
+    const guaData = {
+        "坎": { type: "東四命", cells: {"巽(東南)":"生氣(大吉)","離(正南)":"延年(中吉)","震(正東)":"天醫(次吉)","坎(正北)":"伏位(小吉)","坤(西南)":"絕命(大凶)","兌(正西)":"禍害(次凶)","艮(東北)":"五鬼(大凶)","乾(西北)":"六煞(次凶)","中宮":"中宮"} },
+        "離": { type: "東四命", cells: {"震(正東)":"生氣(大吉)","坎(正北)":"延年(中吉)","巽(東南)":"天醫(次吉)","離(正南)":"伏位(小吉)","乾(西北)":"絕命(大凶)","艮(東北)":"禍害(次凶)","兌(正西)":"五鬼(大凶)","坤(西南)":"六煞(次凶)","中宮":"中宮"} },
+        "震": { type: "東四命", cells: {"離(正南)":"生氣(大吉)","巽(東南)":"延年(中吉)","坎(正北)":"天醫(次吉)","震(正東)":"伏位(小吉)","兌(正西)":"絕命(大凶)","坤(西南)":"禍害(次凶)","乾(西北)":"五鬼(大凶)","艮(東北)":"六煞(次凶)","中宮":"中宮"} },
+        "巽": { type: "東四命", cells: {"坎(正北)":"生氣(大吉)","震(正東)":"延年(中吉)","離(正南)":"天醫(次吉)","巽(東南)":"伏位(小吉)","艮(東北)":"絕命(大凶)","乾(西北)":"禍害(次凶)","坤(西南)":"五鬼(大凶)","兌(正西)":"六煞(次凶)","中宮":"中宮"} },
+        "乾": { type: "西四命", cells: {"兌(正西)":"生氣(大吉)","坤(西南)":"延年(中吉)","艮(東北)":"天醫(次吉)","乾(西北)":"伏位(小吉)","離(正南)":"絕命(大凶)","巽(東南)":"禍害(次凶)","震(正東)":"五鬼(大凶)","坎(正北)":"六煞(次凶)","中宮":"中宮"} },
+        "坤": { type: "西四命", cells: {"艮(東北)":"生氣(大吉)","乾(西北)":"延年(中吉)","兌(正西)":"天醫(次吉)","坤(西南)":"伏位(小吉)","坎(正北)":"絕命(大凶)","震(正東)":"禍害(次凶)","巽(東南)":"五鬼(大凶)","離(正南)":"六煞(次凶)","中宮":"中宮"} },
+        "兌": { type: "西四命", cells: {"乾(西北)":"生氣(大吉)","艮(東北)":"延年(中吉)","坤(西南)":"天醫(次吉)","兌(正西)":"伏位(小吉)","震(正東)":"絕命(大凶)","坎(正北)":"禍害(次凶)","離(正南)":"五鬼(大凶)","巽(東南)":"六煞(次凶)","中宮":"中宮"} },
+        "艮": { type: "西四命", cells: {"坤(西南)":"生氣(大吉)","兌(正西)":"延年(中吉)","乾(西北)":"天醫(次吉)","艮(東北)":"伏位(小吉)","巽(東南)":"絕命(大凶)","離(正南)":"禍害(次凶)","坎(正北)":"五鬼(大凶)","震(正東)":"六煞(次凶)","中宮":"中宮"} }
+    };
+
+    const layout = ["巽(東南)", "離(正南)", "坤(西南)", "震(正東)", "中宮", "兌(正西)", "艮(東北)", "坎(正北)", "乾(西北)"];
+
+    // 計算本命卦核心邏輯
+    function getMingGua(year, gender) {
+        let sum = 0;
+        let tmp = year;
+        while(tmp > 0) { sum += tmp % 10; tmp = Math.floor(tmp / 10); }
+        while(sum >= 10) { sum = Math.floor(sum / 10) + (sum % 10); }
+        
+        if(gender === "男") {
+            let res = (11 - sum) % 9;
+            if(res === 0) res = 9;
+            if(res === 5) return "坤"; 
+            const map = {1:"坎", 2:"坤", 3:"震", 4:"巽", 6:"乾", 7:"兌", 8:"艮", 9:"離"};
+            return map[res];
+        } else {
+            let res = (sum + 4) % 9;
+            if(res === 0) res = 9;
+            if(res === 5) return "艮"; 
+            const map = {1:"坎", 2:"坤", 3:"震", 4:"巽", 6:"乾", 7:"兌", 8:"艮", 9:"離"};
+            return map[res];
+        }
     }
-    function makeGrid(elementId, targetGong, tagClass, tagText) {
-        const container = document.getElementById(elementId);
-        if (!container) return;
-        container.innerHTML = '';
-        layout.forEach(name => {
-            const state = bazhai[name];
-            const cell = document.createElement('div');
-            cell.className = `cell ${state}`;
-            cell.innerText = name + (state==='ji'?' (吉)':state==='xiong'?' (凶)':'');
-            if(name === targetGong) {
-                const tag = document.createElement('div');
-                tag.className = `tag ${tagClass}`;
-                tag.innerText = tagText;
-                cell.appendChild(tag);
+
+    function processAll() {
+        // A. 抓取八字數值並同步到表格
+        const rz = document.getElementById('riZhu').value;
+        const rzi = document.getElementById('riZhi').value;
+        const nT = document.getElementById('nianTen').value;
+        const yT = document.getElementById('yueTen').value;
+        const sT = document.getElementById('shiTen').value;
+        const nZ = document.getElementById('nianZhi').value;
+        const yZ = document.getElementById('yueZhi').value;
+        const sZ = document.getElementById('shiZhi').value;
+
+        document.getElementById('tRiZhu').innerText = rz;
+        document.getElementById('tRiZhi').innerText = rzi + '水'; // 表格日支
+        document.getElementById('tNianTen').innerText = nT;
+        document.getElementById('tYueTen').innerText = yT;
+        document.getElementById('tShiTen').innerText = sT;
+        document.getElementById('tNianZhi').innerText = nZ;
+        document.getElementById('tYueZhi').innerText = yZ;
+        document.getElementById('tShiZhi').innerText = sZ;
+
+        // B. 八字文本詳解
+        document.getElementById('riZhuAnalysis').innerHTML = riZhuText[rz] || "";
+        
+        let tenShenHtml = `<ul>
+            <li>${tenShenText[nT]["年"]}</li>
+            <li>${tenShenText[yT]["月"]}</li>
+            <li>${tenShenText[sT]["時"]}</li>
+        </ul>`;
+        document.getElementById('tenShenAnalysis').innerHTML = tenShenHtml;
+
+        // 地支衝合分析
+        const activeZhi = [nZ, yZ, rzi, sZ];
+        let zhiDesc = [];
+        zhiRelations.forEach(r => {
+            if(activeZhi.includes(r.keys[0]) && activeZhi.includes(r.keys[1])) {
+                zhiDesc.push(`⚠️ 命盤內現【${r.name}】局：${r.desc}`);
             }
-            container.appendChild(cell);
         });
-    }
-    function render() {
-        const oTarget = oSel.value;
-        const hTarget = hSel.value;
-        makeGrid('officeGrid', oTarget, 'seat', '💺 您的座位');
-        makeGrid('homeGrid', hTarget, 'door', '🚪 住宅大門');
-        const oTxt = document.getElementById('oTxt');
-        const hTxt = document.getElementById('hTxt');
-        if(oTxt) {
-            oTxt.innerText = bazhai[oTarget] === 'ji' 
-                ? `您的辦公座位落在【${oTarget}吉方】。本月利於精準思考，右手邊放一杯水能加速催旺財運。`
-                : `您的座位在【${oTarget}凶方】。請在辦公桌的「正西」、「西南」或「東北」這三個吉利方位擺放筆電或重要合約化煞。`;
+        if(zhiDesc.length === 0) {
+            zhiDesc.push("✅ 您的八字大局地支氣場平穩，無明顯的惡性劇烈刑衝。年支主少年根基、月支主青年事業、日支主中年家庭、時支主晚年歸宿，四氣流通良好。");
         }
-        if(hTxt) {
-            hTxt.innerText = bazhai[hTarget] === 'ji' 
-                ? `住宅大門開在【${hTarget}吉方】，納入財氣。本月請保持玄關燈火明亮，大幅催旺貴人運。`
-                : `住宅大門開在【${hTarget}凶方】。玄關切勿堆放雜物，門口建議加鋪一張深藍色或黑色地墊化解煞氣。`;
-        }
+        document.getElementById('zhiAnalysis').innerHTML = zhiDesc.join("<br>");
+
+        // 婚姻宮分析
+        document.getElementById('spouseAnalysis').innerHTML = `您的婚姻宮坐【${rzi}】，代表：${spouseText[rzi] || ""}`;
+
+        // C. 東西四命九宮佈局
+        const bYear = parseInt(document.getElementById('birthYear').value);
+        const gen = document.getElementById('gender').value;
+        const gua = getMingGua(bYear, gen);
+        
+        document.getElementById('mingGuaTxt').innerText = `您的本命卦為：【${gua}命】 (${guaData[gua].type})`;
+
+        const currentGuaConfig = guaData[gua].cells;
+        const gridBox = document.getElementById('homeGrid');
+        gridBox.innerHTML = '';
+
+        let jiCount = 0;
+        let layoutDetails = [];
+
+        layout.forEach(name => {
+            const star = currentGuaConfig[name];
+            const cell = document.createElement('div');
+            
+            let isJi = star.includes("吉") || star.includes("伏位");
+            cell.className = `cell ${isJi ? 'ji' : star.includes("凶") ? 'xiong' : ''}`;
+            cell.innerHTML = `<div>${name}</div>`;
+            
+            if(star !== "中宮") {
+                const starSpan = document.createElement('span');
+                starSpan.className = 'cell-star';
+                starSpan.innerText = star;
+                cell.appendChild(starSpan);
+                
+                // 收集文字註解
+                layoutDetails.push(`<strong>${name} (${star})</strong>：${
+                    star.includes("生氣") ? "此乃第一吉方，精力充沛、催財、催旺事業運，建議設置主臥室、大門或辦公桌。" :
+                    star.includes("延年") ? "此乃和諧吉方，主管身體健康、長壽、夫妻感情與人際貴人，適合設置客廳或臥室。" :
+                    star.includes("天醫") ? "此乃祛病吉方，代表財富與貴人身體健康，極度適合在此方位擺放神位或作餐廳。" :
+                    star.includes("伏位") ? "此乃平穩吉方，代表平安、思緒沉穩、蓄勢待發，適合作為書房或靜坐空間。" :
+                    star.includes("絕命") ? "此乃極凶方位，大耗精力、多病痛、破財。<strong>切勿在此安床或開大門</strong>，此處宜作廁所化煞。" :
+                    star.includes("五鬼") ? "此乃大凶火方，易招惹口舌是非、小人、突發意外。此處忌諱喧鬧，應保持乾淨陰涼。" :
+                    star.includes("禍害") ? "此乃次凶方位，容易因意志消沉、小人散布謠言而蒙受財產損失，此方不宜長期久坐。" :
+                    "此乃次凶桃花之方，容易引發情緒起伏或人際誤會，不宜作為核心活動區。"
+                }`);
+            } else {
+                cell.innerHTML += `<span class="cell-star">中宮</span>`;
+            }
+            gridBox.appendChild(cell);
+        });
+
+        document.getElementById('guaLayoutAnalysis').innerHTML = `<ul>${layoutDetails.map(d => `<li>${d}</li>`).join("")}</ul>`;
     }
-    setTimeout(render, 500);
+
+    // 初始化執行一次
+    processAll();
 </script>
 </body>
 </html>
