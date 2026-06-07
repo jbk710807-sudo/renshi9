@@ -206,3 +206,110 @@
 </script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>壬水九號・八戰空間決策盤</title>
+    <style>
+        :root { --bg: #030508; --card: #080d16; --gold: #ffd154; --text: #ffffff; --muted: #879fb9; --border: #141b29; --ji: #00e676; --xiong: #ff3333; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+        body { background: var(--bg); color: var(--text); padding: 16px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 460px; }
+        .header { text-align: center; padding: 15px 0; border-bottom: 1px solid var(--border); color: var(--gold); font-size: 18px; }
+        .card { background: linear-gradient(135deg, #0e1726, #040810); border: 1px solid var(--gold); border-radius: 14px; padding: 16px; margin: 16px 0; font-size: 13px; line-height: 1.6; }
+        .select-style { width: 100%; background: #101726; border: 1px solid var(--border); color: var(--text); padding: 12px; border-radius: 8px; font-weight: bold; margin: 8px 0 16px 0; font-size: 14px; }
+        .grid-title { font-size: 12px; color: var(--gold); text-align: center; margin-bottom: 6px; font-weight: bold; }
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; background: #04070c; padding: 8px; border-radius: 10px; border: 1px solid #1f2c42; margin-bottom: 16px; }
+        .cell { background: #101726; aspect-ratio: 1; border-radius: 6px; display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 11px; font-weight: bold; border: 1px solid var(--border); position: relative; }
+        .cell.ji { border: 1px solid var(--ji); color: var(--ji); background: rgba(0,230,118,0.05); }
+        .cell.xiong { border: 1px solid var(--xiong); color: var(--xiong); background: rgba(255,51,51,0.05); }
+        .tag { position: absolute; bottom: 4px; font-size: 9px; padding: 2px 4px; border-radius: 4px; color: #000; font-weight: bold; width: 85%; text-align: center; }
+        .tag.seat { background: #00b0ff; color: #fff; }
+        .tag.door { background: #ff9100; }
+        .tips-box { background: #0a111e; padding: 12px; border-radius: 8px; border-left: 4px solid var(--gold); margin-top: 8px; font-size: 13px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">👑 壬水九號・專屬八戰空間決策盤</div>
+    <div class="card">
+        <strong>🔮 癸巳流月偏印運勢 (6/5 - 7/7)</strong><br>
+        比肩年逢偏印月，心思敏銳、求新求變。此月擁有極佳的開創與佈局智慧，但行事宜沉穩低調，防範人際暗傷，即可化煞為財。
+    </div>
+    
+    <label style="font-size:12px; color:var(--muted);">💼 職場戰局：您的【辦公桌】坐向</label>
+    <select id="selOffice" class="select-style" onchange="render()"></select>
+    <div class="grid-title">💼 辦公室八宅吉凶（上南下北）</div>
+    <div id="officeGrid" class="grid"></div>
+
+    <label style="font-size:12px; color:var(--muted);">🛌 住宅防禦：您的【居家住宅】大門開向</label>
+    <select id="selHome" class="select-style" onchange="render()"></select>
+    <div class="grid-title">🛌 居家住宅八宅吉凶（上南下北）</div>
+    <div id="homeGrid" class="grid"></div>
+
+    <div class="card" style="border: 1px solid var(--border);">
+        <span style="color:var(--gold); font-weight:bold;">🎯 本月空間開運處方</span>
+        <div class="tips-box"><strong>辦公室指南：</strong><span id="oTxt"></span></div>
+        <div class="tips-box"><strong>居家大門指南：</strong><span id="hTxt"></span></div>
+    </div>
+</div>
+
+<script>
+    const bazhai = {"巽(東南)":"xiong", "離(正南)":"xiong", "坤(西南)":"ji", "震(正東)":"xiong", "中宮":"normal", "兌(正西)":"ji", "艮(東北)":"ji", "坎(正北)":"xiong", "乾(西北)":"ji"};
+    const layout = ["巽(東南)", "離(正南)", "坤(西南)", "震(正東)", "中宮", "兌(正西)", "艮(東北)", "坎(正北)", "乾(西北)"];
+    const options = [
+        {text:"坐午向子 (坐南朝北)", val:"離(正南)", dVal:"坎(正北)"},
+        {text:"坐子向午 (坐北朝南)", val:"坎(正北)", dVal:"離(正南)"},
+        {text:"坐酉向卯 (坐西朝東)", val:"兌(正西)", dVal:"震(正東)"},
+        {text:"坐卯向酉 (坐東朝西)", val:"震(正東)", dVal:"兌(正西)"},
+        {text:"坐巽向乾 (坐東南朝西北)", val:"巽(東南)", dVal:"乾(西北)"},
+        {text:"坐乾向巽 (坐西北朝東南)", val:"乾(西北)", dVal:"巽(東南)"},
+        {text:"坐艮向坤 (坐東北朝西南)", val:"艮(東北)", dVal:"坤(西南)"},
+        {text:"坐坤向艮 (坐西南朝東北)", val:"坤(西南)", dVal:"艮(東北)"}
+    ];
+
+    const oSel = document.getElementById('selOffice');
+    const hSel = document.getElementById('selHome');
+    options.forEach(o => {
+        oSel.add(new Option(o.text, o.val));
+        hSel.add(new Option(o.text, o.dVal));
+    });
+
+    function makeGrid(elementId, targetGong, tagClass, tagText) {
+        const container = document.getElementById(elementId);
+        container.innerHTML = '';
+        layout.forEach(name => {
+            const state = bazhai[name];
+            const cell = document.createElement('div');
+            cell.className = cell ${state};
+            cell.innerText = name + (state==='ji'?' (吉)':state==='xiong'?' (凶)':'');
+            if(name === targetGong) {
+                const tag = document.createElement('div');
+                tag.className = tag ${tagClass};
+                tag.innerText = tagText;
+                cell.appendChild(tag);
+            }
+            container.appendChild(cell);
+        });
+    }
+
+    function render() {
+        const oTarget = oSel.value;
+        const hTarget = hSel.value;
+        makeGrid('officeGrid', oTarget, 'seat', '💺 您的座位');
+        makeGrid('homeGrid', hTarget, 'door', '🚪 住宅大門');
+
+        document.getElementById('oTxt').innerText = bazhai[oTarget] === 'ji' 
+            ? 座位在【${oTarget}吉方】，流月運勢平穩。重要文件可收納於此，利於暗中運籌帷幄、思考布局。
+            : 座位在【${oTarget}凶方】，偏印月宜低調。建議多利用桌面的西北、西南或東北吉方擺放重要合約，化煞為財。;
+            
+        document.getElementById('hTxt').innerText = bazhai[hTarget] === 'ji' 
+            ? 大門開在【${hTarget}吉方】，旺氣臨門。玄關保持明亮整潔，可讓偏印月的巧思轉化為實質財運。
+            : 大門開在【${hTarget}凶方】，進出宜保持和氣。玄關切勿堆放雜物，可使用深色地墊轉換進門磁場，出入平安。;
+    }
+    render();
+</script>
+</body>
+</html>
