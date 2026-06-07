@@ -11,25 +11,8 @@
         .container { width: 100%; max-width: 440px; }
         .header { text-align: center; padding: 15px 0; border-bottom: 1px solid var(--border); color: var(--gold); font-size: 18px; font-weight: bold; }
         .card { background: linear-gradient(135deg, #0e1726, #040810); border: 1px solid var(--gold); border-radius: 14px; padding: 16px; margin: 16px 0; font-size: 14px; line-height: 1.7; }
-        
-        /* ⚡ 手機選單防黑框、字體白色樣式 */
-        .select-style { 
-            width: 100%; 
-            background: #101726 !important; 
-            border: 1px solid var(--gold) !important; 
-            color: #ffffff !important; 
-            padding: 12px; 
-            border-radius: 8px; 
-            font-weight: bold; 
-            margin: 8px 0 20px 0; 
-            font-size: 14px; 
-            display: block;
-        }
-        .select-style option {
-            background-color: #101726 !important;
-            color: #ffffff !important;
-        }
-
+        .select-style { width: 100%; background: #101726 !important; border: 1px solid var(--gold) !important; color: #ffffff !important; padding: 12px; border-radius: 8px; font-weight: bold; margin: 8px 0 20px 0; font-size: 14px; display: block; }
+        .select-style option { background-color: #101726 !important; color: #ffffff !important; }
         .grid-title { font-size: 13px; color: var(--gold); text-align: center; margin-bottom: 8px; font-weight: bold; }
         .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; background: #04070c; padding: 10px; border-radius: 12px; border: 1px solid #1f2c42; margin-bottom: 24px; min-height: 100px; }
         .cell { background: #101726; aspect-ratio: 1; border-radius: 8px; display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 11px; font-weight: bold; border: 1px solid var(--border); position: relative; color: #fff; }
@@ -44,34 +27,26 @@
 <body>
 <div class="container">
     <div class="header">👑 壬水九號・食神生財空間決策盤</div>
-    
     <div class="card">
         <span style="color:var(--gold); font-size:16px; font-weight:bold;">🍀 甲午流月・食神生財運勢 (6/5 - 7/7)</span><br><br>
         <strong>【天時氣場解析】</strong><br>
-        壬水日主見甲木為<strong>「食神」</strong>，見午火為<strong>「正財」</strong>。本月由「芒種」節氣管轄，是標準的食神生財氣場！才華橫溢、大腦靈感湧現，非常有利於規劃新項目與合作。
-        <br><br>
+        壬水日主見甲木為<strong>「食神」</strong>，見午火為<strong>「正財」</strong>。本月由「芒種」節氣管轄，是標準的食神生財氣場！才華橫溢、大腦靈感湧現，非常有利於規劃新項目與合作。<br><br>
         <strong>⚠️ 注意：</strong>地支午午自刑，內心容易糾結。本系統將透過空間磁場調校，把點子變現！
     </div>
-    
     <label style="font-size:13px; color: var(--muted); font-weight:bold;">💼 職場佈局：選擇您的【辦公桌】坐向</label>
     <select id="selOffice" class="select-style" onchange="render()"></select>
-    
     <div class="grid-title">💼 辦公室八宅吉凶空間（上南下北）</div>
     <div id="officeGrid" class="grid"></div>
-
     <label style="font-size:13px; color: var(--muted); font-weight:bold;">🛌 居家防禦：選擇您的【住宅大門】開向</label>
     <select id="selHome" class="select-style" onchange="render()"></select>
-    
     <div class="grid-title">🛌 居家住宅八宅吉凶空間（上南下北）</div>
     <div id="homeGrid" class="grid"></div>
-
     <div class="card" style="border: 1px solid var(--border);">
         <span style="color:var(--gold); font-size:15px; font-weight:bold;">🎯 本月空間開運處方籤</span>
         <div class="tips-box"><strong>💻 辦公桌方位：</strong><span id="oTxt"></span></div>
-        <div class="tips-box)<strong>🏡 住宅大門防禦：</strong><span id="hTxt"></span></div>
+        <div class="tips-box"><strong>🏡 住宅大門防禦：</strong><span id="hTxt"></span></div>
     </div>
 </div>
-
 <script>
     const bazhai = {"巽(東南)":"xiong", "離(正南)":"xiong", "坤(西南)":"ji", "震(正東)":"xiong", "中宮":"normal", "兌(正西)":"ji", "艮(東北)":"ji", "坎(正北)":"xiong", "乾(西北)":"ji"};
     const layout = ["巽(東南)", "離(正南)", "坤(西南)", "震(正東)", "中宮", "兌(正西)", "艮(東北)", "坎(正北)", "乾(西北)"];
@@ -85,15 +60,12 @@
         {text:"坐艮向坤 (坐東北朝西南)", val:"艮(東北)", dVal:"坤(西南)"},
         {text:"坐坤向艮 (坐西南朝東北)", val:"坤(西南)", dVal:"艮(東北)"}
     ];
-
     const oSel = document.getElementById('selOffice');
     const hSel = document.getElementById('selHome');
-    
     options.forEach(o => {
         oSel.add(new Option(o.text, o.val));
         hSel.add(new Option(o.text, o.dVal));
     });
-
     function makeGrid(elementId, targetGong, tagClass, tagText) {
         const container = document.getElementById(elementId);
         if (!container) return;
@@ -101,39 +73,24 @@
         layout.forEach(name => {
             const state = bazhai[name];
             const cell = document.createElement('div');
-            cell.className = cell ${state};
+            cell.className = `cell ${state}`;
             cell.innerText = name + (state==='ji'?' (吉)':state==='xiong'?' (凶)':'');
             if(name === targetGong) {
                 const tag = document.createElement('div');
-                tag.className = tag ${tagClass};
+                tag.className = `tag ${tagClass}`;
                 tag.innerText = tagText;
                 cell.appendChild(tag);
             }
             container.appendChild(cell);
         });
     }
-
     function render() {
         const oTarget = oSel.value;
         const hTarget = hSel.value;
         makeGrid('officeGrid', oTarget, 'seat', '💺 您的座位');
         makeGrid('homeGrid', hTarget, 'door', '🚪 住宅大門');
-
         const oTxt = document.getElementById('oTxt');
         const hTxt = document.getElementById('hTxt');
-        
         if(oTxt) {
             oTxt.innerText = bazhai[oTarget] === 'ji' 
-                ? 您的辦公座位落在【${oTarget}吉方】。本月利於精準思考，右手邊放一杯水能加速催旺財運。
-                : 您的座位在【${oTarget}凶方】。請在辦公桌的「正西」、「西南」或「東北」這三個吉利方位擺放筆電或重要合約化煞。;
-        }
-        if(hTxt) {
-            hTxt.innerText = bazhai[hTarget] === 'ji' 
-                ? 住宅大門開在【${hTarget}吉方】，納入財氣。本月請保持玄關燈火明亮，大幅催旺貴人運。
-                : 住宅大門開在【${hTarget}凶方】。玄關切勿堆放雜物，門口建議加鋪一張深藍色或黑色地墊化解煞氣。;
-        }
-    }
-    render();
-</script>
-</body>
-</html>
+                ? `您的辦公座位落在【${oTarget}吉方】。本月利於精準思考，右手邊放一杯水能
