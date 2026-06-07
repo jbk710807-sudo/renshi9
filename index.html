@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天盤本命衝定格・雙空間天時決策系統</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-color: #030508;
+            --card-bg: #080d16;
+            --accent-gold: #ffd154;
+            --text-main: #ffffff;
+            --text-muted: #879fb9;
+            --border-color: #141b29;
+            --ji-green: #00e676;
+            --xiong-red: #ff3333;
+            --alert-orange: #ff9100;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); padding: 16px; display: flex; justify-content: center; }
+        .app-container { width: 100%; max-width: 460px; }
+        
+        .header-section { text-align: center; padding: 15px 0; border-bottom: 1px solid var(--border-color); }
+        .header-section h1 { font-size: 20px; color: var(--accent-gold); letter-spacing: 1px; margin-bottom: 6px; }
+        .sub-badge { background: #152035; border: 1px solid var(--accent-gold); padding: 4px 12px; border-radius: 20px; font-size: 11px; color: var(--accent-gold); display: inline-block; margin-bottom: 12px; }
+
+        /* 🔮 核心優化：本命天盤基因解析卡片 */
+        .bazhai-card {
+            background: linear-gradient(135deg, #0e1726, #040810);
+            border: 1px solid var(--accent-gold);
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 15px rgba(255, 209, 84, 0.1);
+        }
+        .section-title { font-size: 14px; color: var(--accent-gold); margin-bottom: 10px; font-weight: 600; letter-spacing: 1px; display: flex; align-items: center; gap: 6px; }
+        
+        .car-warn-box {
+            background: rgba(255, 145, 0, 0.06);
+            border: 1px solid var(--alert-orange);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 10px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        .car-title { color: var(--alert-orange); font-weight: bold; margin-bottom: 4px; display: flex; align-items: center; gap: 4px; }
+
+        /* 雙重實體空間選擇與動態九宮格 */
+        .matrix-container { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 14px; padding: 16px; margin-bottom: 16px; }
+        .select-group { margin-bottom: 12px; }
+        .select-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; font-weight: bold; }
+        .select-style { width: 100%; background: #101726; border: 1px solid var(--border-color); color: var(--text-main); padding: 10px; border-radius: 8px; font-weight: bold; font-size: 13px; outline: none; }
+        
+        .grid-visual-title { font-size: 11px; color: var(--accent-gold); text-align: center; margin: 8px 0 4px 0; }
+        .nine-gong-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; background: #04070c; padding: 6px; border-radius: 10px; border: 1px solid #1f2c42; margin-bottom: 12px; }
+        .gong-cell { background: #101726; aspect-ratio: 1; border-radius: 6px; display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 11px; font-weight: bold; position: relative; }
+        .gong-cell.ji { border: 1px solid var(--ji-green); color: var(--ji-green); background: rgba(0, 230, 118, 0.02); }
+        .gong-cell.xiong { border: 1px solid var(--xiong-red); color: var(--xiong-red); background: rgba(255, 51, 51, 0.02); }
+        .door-tag { position: absolute; bottom: 2px; background: var(--alert-orange); color: #000; font-size: 9px; padding: 1px 4px; border-radius: 3px; font-weight: 900; }
+        .seat-tag { position: absolute; bottom: 2px; background: #00b0ff; color: #fff; font-size: 9px; padding: 1px 4px; border-radius: 3px; font-weight: 900; }
+
+        /* 流月切換與看板 */
+        .month-selector-container { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 14px; padding: 10px; margin-bottom: 16px; }
+        .month-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+        .month-btn { background-color: #101726; border: 1px solid var(--border-color); color: var(--text-muted); padding: 8px 0; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; }
+        .month-btn.active { background: linear-gradient(135deg, var(--accent-gold), #dba035); color: #030508; border-color: var(--accent-gold); }
+
+        .dynamic-info-card { background: linear-gradient(135deg, #0d1524, #04070c); border-radius: 16px; padding: 16px; border: 1px solid var(--border-color); margin-bottom: 16px; }
+        .space-directive-box { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-color); }
+        .space-title-badge { display: inline-block; background: rgba(0, 230, 118, 0.1); color: #00e676; font-size: 11px; font-weight: bold; padding: 2px 8px; border-radius: 4px; margin-bottom: 6px; }
+        .space-title-badge.office { background: rgba(255, 209, 84, 0.1); color: var(--accent-gold); }
+        .space-title-badge.alert { background: rgba(255, 51, 51, 0.15); color: var(--xiong-red); border: 1px solid var(--xiong-red); }
+        .directive-text { font-size: 13px; line-height: 1.6; color: var(--text-muted); }
+        
+        .chart-section { background-color: var(--card-bg); border-radius: 16px; padding: 16px; border: 1px solid var(--border-color); margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+
+    <div class="header-section">
+        <h1>壬水九號・天盤本命與雙空間戰略</h1>
+        <div class="sub-badge">👑 尊榮版：本命地支衝特質已永續定格</div>
+    </div>
+
+    <div class="bazhai-card">
+        <div class="section-title">🔮 本命天盤格局鑑定：西四命 ✕ 雙馬交馳格</div>
+        <p style="font-size:12px; color:var(--text-muted); line-height:1.5;">
+            經核算，您本命自帶【寅申衝】與【巳亥衝】複數驛馬交戰。這在商務上是極強的開拓天賦，但在日常物理移動中，具備極強的特殊駕駛慣性：
+        </p>
+        
+        <div class="car-warn-box">
+            <div class="car-title">🧭 巳亥相衝 — 巷弄鑽小路之王</div>
+            <div style="color: #c9d6e4;">你開車或騎車時，體內天生帶有「捷徑魔咒」。只要導航叫你右轉，你往往不想走無聊的大馬路，最愛鑽那些連貓走過去都嫌擠的巷弄小路。務必注意忽然彈出來的小白行人和阿嬤電動車！</div>
+        </div>
+
+        <div class="car-warn-box" style="margin-top: 8px;">
+            <div class="car-title">🏎️ 寅申相衝 — 地表最強超車強迫症</div>
+            <div style="color: #c9d6e4;">你的字典裡絕對容不下任何一輛慢車開在你的正前方！只要前車煞車燈多亮兩下，你雙手就會瞬間緊握方向盤，大腦瘋狂下達「超過去！立刻！」的指令。這群拓海魂是你終身要封印的衝動。</div>
+        </div>
+    </div>
+
+    <div class="matrix-container">
+        <div class="select-group">
+            <label>💼 職場戰局：您的【辦公桌】坐向位置</label>
+            <select id="selOffice" class="select-style" onchange="updateLayout()">
+                <option value="S_N">坐午向子 (坐南朝北) — 辦公椅靠南方牆</option>
+                <option value="N_S">坐子向午 (坐北朝南) — 辦公椅靠北方牆</option>
+            </select>
+        </div>
+        <div class="grid-visual-title">💼 辦公室實體座位定錨（上南下北）</div>
+        <div class="nine-gong-grid" id="officeGrid"></div>
+
+        <div class="select-group" style="margin-top: 16px;">
+            <label>🛌 避險後方：您的【居家住宅】大門開向</label>
+            <select id="selHome" class="select-style" onchange="updateLayout()">
+                <option value="N_S">坐子向午 (住宅大門朝正南方開)</option>
+                <option value="S_N">坐午向子 (住宅大門朝正北方開)</option>
+            </select>
+        </div>
+        <div class="grid-visual-title">🛌 居家大門實體位置定錨（上南下北）</div>
+        <div class="nine-gong-grid" id="homeGrid"></div>
+    </div>
+
+    <div class="month-selector-container">
+        <div class="month-grid">
+            <button class="month-btn" onclick="switchMonth(2)">二月 (初春)</button>
+            <button class="month-btn active" onclick="switchMonth(6)">六月 (火煞)</button>
+            <button class="month-btn" onclick="switchMonth(😎">八月 (金旺)</button>
+        </div>
+    </div>
+
+    <div class="dynamic-info-card">
+        <div class="section-title" style="font-size:14px; color:var(--accent-gold);" id="lblMonthName">甲午月 天時盤</div>
+        
+        <div id="sixMonthAlert" class="space-directive-box" style="display: none;">
+            <div class="space-title-badge alert">🔥 六月・雙午火煞重疊特調警告</div>
+            <div class="directive-text" style="color: #ff5252; font-weight: bold; background: rgba(255,51,51,0.05); padding: 10px; border-radius: 6px; border-left: 3px solid var(--xiong-red);">
+                【全網馬路燥火引爆！】本月正值雙午自刑、火煞沖天格局。大環境的「集體路怒症」達到全年最高峰。你本命的「鑽小路魂」與「超車強迫症」會被外面的三寶徹底點燃！本月上車請強迫播放古典樂，右腳含著煞車，絕對不跟馬路上的蠢蛋爭一時勝負，肉身物理退場！
+            </div>
+        </div>
+
+        <div class="space-directive-box">
+            <div class="space-title-badge office">💼 辦公室化煞決策</div>
+            <div class="directive-text" id="lblOfficeDirective">載入中...</div>
+        </div>
+
+        <div class="space-directive-box">
+            <div class="space-title-badge">🛌 居家避險決策</div>
+            <div class="directive-text" id="lblHomeDirective">載入中...</div>
+        </div>
+    </div>
+
+    <div class="chart-section">
+        <canvas id="monthChart" width="400" height="130"></canvas>
+    </div>
+</div>
+
+<script>
+const bazhaiStatus = {
+    "巽(東南)": "xiong", "離(正南)": "xiong", "坤(西南)": "ji",
+    "震(正東)": "xiong", "中宮": "normal",      "兌(正西)": "ji",
+    "艮(東北)": "ji",    "坎(正北)": "xiong", "乾(西北)": "ji"
+};
+const gridOrder = ["巽(東南)", "離(正南)", "坤(西南)", "震(正東)", "中宮", "兌(正西)", "艮(東北)", "坎(正北)", "乾(西北)"];
+
+const textDatabase = {
+    2: {
+        name: "丙寅月 (初春能量盤)",
+        chart: [30, 80, 40, 50, 40],
+        office: "【小白對照】看上方九宮格：初春木旺，您的辦公位若在南方紅色凶方，本月辦公桌左手邊切勿放置枯萎盆栽。保持桌面乾淨，將合約收在西北方綠色吉位，用冷靜度過開春拉鋸。",
+        home: "【小白對照】大門開在正南紅色區者，流月木來生火。本月進出玄關請保持明亮，不宜堆放鞋盒雜物。可在進門左側的東北綠色吉方放置實體金屬裝飾，穩固居家底氣。"
+    },
+    6: {
+        name: "甲午月 (六月・雙午雙生火煞盤)",
+        chart: [10, 40, 20, 100, 95],
+        office: "【極度高危】看九宮格：本月火煞高達 100%！如果你的辦公椅靠正南紅色絕命區，代表職場主管的施壓與小人背黑鍋情事達到頂峰。此時不要在座位上跟任何人據理力爭。保持高冷，把重要檔案移到右側正西綠色吉方，肉身隱形防禦。",
+        home: "【空間紅色警報】大門開在正南方紅色絕命區者，本月火煞直接燒大門！全家人脾氣易暴躁。客廳正南方的高功率電器本月能少開就少開，大門口玄關處強行換上深藍色系布置，用水氣物理壓制烈火官殺。"
+    },
+    8: {
+        name: "丙申月 (秋季金旺盤)",
+        chart: [90, 20, 60, 30, 40],
+        office: "【轉機來臨】金水出鞘。座位靠北邊紅色區者，本月水分得到補充。之前延宕的科技部署或合約可以重新啟動。將主要操作電腦朝向正西綠色吉方，能成倍放大你的變現效率。",
+        home: "【吉星高照】大門開在正南者火氣退卻。本月多待在客廳的西北方（伏位）或西南方（延年）這兩個綠色格子裡放鬆或策劃新項目。家裡是你最強的能量蓄水池。"
+    }
+};
+
+let currentMonth = 6;
+let myChart;
+
+function renderGrid(containerId, selectId, tagText, type) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = "";
+    const selectedValue = document.getElementById(selectId).value;
+
+    gridOrder.forEach(name => {
+        const cell = document.createElement('div');
+        cell.className = gong-cell ${bazhaiStatus[name]};
+        cell.innerText = name + (bazhaiStatus[name] === "ji" ? " (吉)" : bazhaiStatus[name] === "xiong" ? " (凶)" : "");
+
+        if (type === 'office') {
+            if (selectedValue === "S_N" && name === "離(正南)") cell.innerHTML += <div class="seat-tag">${tagText}</div>;
+            if (selectedValue === "N_S" && name === "坎(正北)") cell.innerHTML += <div class="seat-tag">${tagText}</div>;
+        } else {
+            if (selectedValue === "N_S" && name === "離(正南)") cell.innerHTML += <div class="door-tag">${tagText}</div>;
+            if (selectedValue === "S_N" && name === "坎(正北)") cell.innerHTML += <div class="door-tag">${tagText}</div>;
+        }
+        container.appendChild(cell);
+    });
+}
+
+function updateLayout() {
+    renderGrid("officeGrid", "selOffice", "💺 您的座位", "office");
+    renderGrid("homeGrid", "selHome", "🚪 住宅大門", "home");
+    
+    const mData = textDatabase[currentMonth];
+    document.getElementById('lblMonthName').innerText = mData.name;
+    document.getElementById('lblOfficeDirective').innerText = mData.office;
+    document.getElementById('lblHomeDirective').innerText = mData.home;
+
+    const alertBox = document.getElementById('sixMonthAlert');
+    if (currentMonth === 6) {
+        alertBox.style.display = "block";
+    } else {
+        alertBox.style.display = "none";
+    }
+
+    if(myChart) {
+        myChart.data.datasets[0].data = mData.chart;
+        myChart.update();
+    }
+}
+
+function switchMonth(m) {
+    currentMonth = m;
+    const buttons = document.querySelectorAll('.month-btn');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+    updateLayout();
+}
+
+function initChart() {
+    const ctx = document.getElementById('monthChart').getContext('2d');
+    myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['金', '木', '水', '火', '土'],
+            datasets: [{ data: textDatabase[currentMonth].chart, backgroundColor: ['#fff', '#4bc0c0', '#36a2eb', '#ff3333', '#946140'] }]
+        },
+        options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { display: false }, x: { ticks: { color: '#fff' } } } }
+    });
+}
+
+window.onload = function() {
+    initChart();
+    updateLayout();
+};
+</script>
+</body>
+</html>
+撰寫
+撰寫內容給周柏丞
