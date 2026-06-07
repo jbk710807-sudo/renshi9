@@ -62,6 +62,7 @@
     ];
     const oSel = document.getElementById('selOffice');
     const hSel = document.getElementById('selHome');
+   if (oSel && hSel) {
     options.forEach(o => {
         oSel.add(new Option(o.text, o.val));
         hSel.add(new Option(o.text, o.dVal));
@@ -84,7 +85,7 @@
             container.appendChild(cell);
         });
     }
-    function render() {
+    function setTimeout(render, 500);
         const oTarget = oSel.value;
         const hTarget = hSel.value;
         makeGrid('officeGrid', oTarget, 'seat', '💺 您的座位');
