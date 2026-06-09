@@ -1,51 +1,11 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-    <meta charset="UTF-8">
-    <title>多維度訊息解碼推演</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lunar-javascript/1.6.12/lunar.js"></script>
-    <style>
-        body { font-family: sans-serif; background-color: #121824; color: white; padding: 20px; }
-        .report-card { background-color: #1e293b; padding: 20px; border-radius: 12px; margin-top: 20px; border-left: 5px solid #fbbf24; }
-    </style>
-</head>
-<body>
-    <div id="resultContainer" class="result-container">
-        <div id="report-shensha" class="report-card"></div>
-    </div>
+// 邏輯整合建議：
+const riGan = baZi.getDayGan(); 
+const month = baZi.getMonth(); // lunar-javascript 獲取月份
+// 簡單判斷季節 (春1-3, 夏4-6, 秋7-9, 冬10-12)
+let season = "";
+if ([1,2,3].includes(month)) season = "春季";
+else if ([4,5,6].includes(month)) season = "夏季";
+else if ([7,8,9].includes(month)) season = "秋季";
+else season = "冬季";
 
-<script>
-// 1. 定義深度資料庫
-const DeepReportDB = {
-    "壬水-未月": {
-        pain: "壬水生於未月，外表包容，內心卻是火藥庫。這格局的人極度容易把壓力轉化為腸胃負擔。",
-        advice: "你需要學會『情緒斷捨離』，若長期悶在心底，未土剋水，會引發消化系統災難。"
-    },
-    "壬水-午月": {
-        pain: "財星當令，你對金錢極度敏感，但也極度渴望被認同。",
-        advice: "財氣雖旺，但容易變成金錢的奴隸。今年建議採取『穩健佈局』。"
-    }
-};
-
-function runBaziSystem() {
-    // 這裡放入你原本的排盤運算邏輯...
-    // 假設透過 lunar-javascript 取得了 baZi 物件
-    
-    // --- 整合後的邏輯 ---
-    const riGan = "壬"; // 請確保這是從排盤結果動態獲取的
-    const monthZhi = "未"; // 請確保這是從排盤結果動態獲取的
-    const key = `${riGan}水-${monthZhi}月`; 
-    
-    let deepReport = "<h4>大師深度批註：</h4>";
-    if (DeepReportDB[key]) {
-        deepReport += `<p><strong>性格痛點：</strong>${DeepReportDB[key].pain}</p>`;
-        deepReport += `<p><strong>高階建議：</strong>${DeepReportDB[key].advice}</p>`;
-    } else {
-        deepReport += `<p>您的命局屬於穩定發展型，建議保持內心的平靜。</p>`;
-    }
-
-    document.getElementById('report-shensha').innerHTML = deepReport;
-}
-</script>
-</body>
-</html>
+const key = `${riGan}木-${season}`; // 注意：這裡要配合資料庫的格式
