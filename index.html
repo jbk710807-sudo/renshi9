@@ -1,11 +1,64 @@
-// 邏輯整合建議：
-const riGan = baZi.getDayGan(); 
-const month = baZi.getMonth(); // lunar-javascript 獲取月份
-// 簡單判斷季節 (春1-3, 夏4-6, 秋7-9, 冬10-12)
-let season = "";
-if ([1,2,3].includes(month)) season = "春季";
-else if ([4,5,6].includes(month)) season = "夏季";
-else if ([7,8,9].includes(month)) season = "秋季";
-else season = "冬季";
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>多維度訊息解碼推演</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lunar-javascript/1.6.12/lunar.js"></script>
+    <style>
+        body { font-family: sans-serif; background-color: #121824; color: white; padding: 20px; }
+        .input-card { background-color: #1e293b; padding: 20px; border-radius: 12px; margin-bottom: 20px; }
+        .report-card { background-color: #1e293b; padding: 20px; border-radius: 12px; margin-top: 20px; border-left: 5px solid #fbbf24; }
+        input, button { width: 100%; padding: 10px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="input-card">
+        <input type="text" id="userName" value="測試君">
+        <input type="datetime-local" id="birthDatetime" value="1990-03-05T11:42">
+        <button onclick="runBaziSystem()">開始高階戰略排盤</button>
+    </div>
+    <div id="report-shensha" class="report-card"></div>
 
-const key = `${riGan}木-${season}`; // 注意：這裡要配合資料庫的格式
+<script>
+// 1. 十種日主資料庫
+const DeepReportDB = {
+    "甲木-春季": { pain: "甲木生於春，強勢但易剛愎自用。", advice: "學會『向下兼容』，你的成就取決於你如何整合資源。" },
+    "乙木-春季": { pain: "乙木生於春，容易選擇障礙。", advice: "今年重點在於『深耕』，不要因為瑣事打斷規劃。" },
+    "丙火-夏季": { pain: "丙火生於夏，情緒波動劇烈。", advice: "你需要修練『冷靜』，在決策時退後三步。" },
+    "丁火-夏季": { pain: "丁火生於夏，容易鑽牛角尖。", advice: "學會『放下完美主義』，完成比完美更重要。" },
+    "戊土-秋季": { pain: "戊土生於秋，畏首畏尾。", advice: "你需要『破局的勇氣』，嘗試跨領域合作。" },
+    "己土-秋季": { pain: "己土生於秋，過度自我保護。", advice: "適度展現你的鋒芒，別讓謙虛變成軟弱。" },
+    "庚金-秋季": { pain: "庚金生於秋，講話太直易傷人。", advice: "說話前多想兩秒，人情練達是你的關鍵。" },
+    "辛金-秋季": { pain: "辛金生於秋，常感懷才不遇。", advice: "別對身邊的人太苛刻，你的價值在於影響力。" },
+    "壬水-冬季": { pain: "壬水生於冬，給人距離感。", advice: "多展現你的溫暖，人脈是你今年的財庫。" },
+    "癸水-冬季": { pain: "癸水生於冬，過度猜忌他人。", advice: "信任是你的課題，嘗試開放心胸與人合作。" }
+};
+
+function runBaziSystem() {
+    // 取得日期與排盤
+    const date = new Date(document.getElementById('birthDatetime').value);
+    const lunar = Lunar.fromSolar(Solar.fromYmdHms(date.getFullYear(), date.getMonth()+1, date.getDate(), date.getHours(), 0, 0));
+    const baZi = lunar.getEightChar();
+
+    // 動態判斷季節
+    const month = date.getMonth() + 1;
+    let season = month < 4 ? "春季" : month < 7 ? "夏季" : month < 10 ? "秋季" : "冬季";
+    
+    // 獲取日主 (這裡假設 baZi.getDayGan() 回傳的是 "甲", "乙" 等)
+    const riGan = baZi.getDayGan();
+    const key = `${riGan}木-${season}`; // 注意：這裡需配合資料庫名稱調整，若日主天干與資料庫名稱不同，需做對應
+
+    // 顯示報告
+    let deepReport = "<h4>大師深度批註：</h4>";
+    if (DeepReportDB[key]) {
+        deepReport += `<p><strong>性格痛點：</strong>${DeepReportDB[key].pain}</p>`;
+        deepReport += `<p><strong>高階建議：</strong>${DeepReportDB[key].advice}</p>`;
+    } else {
+        deepReport += `<p>您的命局屬於穩定發展型，建議保持內心的平靜。</p>`;
+    }
+
+    document.getElementById('report-shensha').innerHTML = deepReport;
+}
+</script>
+</body>
+</html>
