@@ -1,124 +1,219 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>策算智庫 | 戰略命理系統</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lunar-javascript/1.6.12/lunar.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        :root {
-            --bg-color: #0b0f19;
-            --card-bg: #131a26;
-            --primary: #f59e0b;
-            --text-main: #f1f5f9;
-            --text-muted: #64748b;
-        }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 20px; }
-        .container { max-width: 600px; margin: 0 auto; }
-        
-        /* Loading */
-        #loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 999; justify-content: center; align-items: center; color: var(--primary); }
-        
-        /* UI Components */
-        .card { background: var(--card-bg); padding: 20px; border-radius: 20px; border: 1px solid #222f44; margin-bottom: 20px; }
-        .tab-nav { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; }
-        .tab-btn { padding: 10px 20px; border-radius: 10px; background: #1e293b; border: none; color: white; cursor: pointer; }
-        .tab-btn.active { background: var(--primary); color: black; }
-        
-        .bazi-grid { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid #222f44; border-radius: 10px; overflow: hidden; }
-        .cell { padding: 10px; text-align: center; border-bottom: 1px solid #222f44; }
-        
-        button { cursor: pointer; }
-        .hidden { display: none; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>智算矩陣™ | AI Strategic Destiny Matrix</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+background:linear-gradient(180deg,#0b1220,#111827);
+color:white;
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+
+.hero{
+padding:80px 20px;
+text-align:center;
+}
+
+.logo{
+font-size:42px;
+font-weight:bold;
+color:#fbbf24;
+text-shadow:0 0 20px rgba(251,191,36,.6);
+}
+
+.subtitle{
+margin-top:15px;
+font-size:20px;
+color:#cbd5e1;
+}
+
+.slogan{
+margin-top:20px;
+font-size:18px;
+line-height:1.8;
+color:#f8fafc;
+}
+
+.cta{
+margin-top:40px;
+}
+
+.cta button{
+background:#fbbf24;
+color:#111827;
+border:none;
+padding:15px 35px;
+font-size:18px;
+font-weight:bold;
+border-radius:12px;
+cursor:pointer;
+}
+
+.section{
+padding:30px 15px;
+}
+
+.section-title{
+text-align:center;
+font-size:28px;
+color:#fbbf24;
+margin-bottom:20px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+gap:15px;
+}
+
+.card{
+background:#1e293b;
+padding:20px;
+border-radius:15px;
+text-align:center;
+border:1px solid #334155;
+}
+
+.card h3{
+margin-bottom:10px;
+color:#fbbf24;
+}
+
+.card p{
+font-size:14px;
+color:#cbd5e1;
+}
+
+.footer{
+padding:40px 20px;
+text-align:center;
+color:#94a3b8;
+}
+
+</style>
+
 </head>
 <body>
 
-<div id="loader">矩陣運算中...</div>
+<section class="hero">
 
-<div class="container">
-    <h1>策算智庫</h1>
-    <p style="text-align:center; color:var(--primary)">高階戰略命理系統</p>
-
-    <div class="card">
-        <input type="text" id="name" class="form-control" placeholder="請輸入姓名" style="width: 100%; padding:10px; margin-bottom:10px; background:#070a10; color:white; border:1px solid #334155;">
-        <input type="datetime-local" id="datetime" class="form-control" style="width: 100%; padding:10px; margin-bottom:10px; background:#070a10; color:white; border:1px solid #334155;">
-        <button class="btn-submit" onclick="startAnalysis()" style="width:100%; padding:15px; background:var(--primary); border:none; border-radius:10px; font-weight:bold;">開始智算矩陣運算</button>
-    </div>
-
-    <div id="resultArea" class="hidden">
-        <div class="tab-nav">
-            <button class="tab-btn active" onclick="showTab('bazi')">八字盤</button>
-            <button class="tab-btn" onclick="showTab('analysis')">AI 戰略</button>
-        </div>
-
-        <div id="bazi-tab" class="tab-content">
-            <div class="card" id="bazi-board"></div>
-            <div class="card">
-                <canvas id="wuxingChart"></canvas>
-            </div>
-        </div>
-
-        <div id="analysis-tab" class="tab-content hidden">
-            <div class="card" id="ai-report"></div>
-        </div>
-    </div>
+<div class="logo">
+智算矩陣™
 </div>
 
-<script>
-    function showTab(tab) {
-        document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-        document.getElementById(tab + '-tab').classList.remove('hidden');
-    }
+<div class="subtitle">
+AI Strategic Destiny Matrix
+</div>
 
-    async function startAnalysis() {
-        document.getElementById('loader').style.display = 'flex';
-        
-        // 模擬延遲
-        await new Promise(r => setTimeout(r, 1500));
-        
-        const name = document.getElementById('name').value;
-        const dt = document.getElementById('datetime').value;
-        const solar = Solar.fromYmdHms(...dt.split(/[-:T]/).map(Number));
-        const bazi = lunar.getEightChar();
+<div class="slogan">
+將人生變數，<br>
+轉化為精準的戰略數據。
+</div>
 
-        // 渲染盤面
-        renderBoard(bazi);
-        renderAIReport(bazi);
-        
-        document.getElementById('resultArea').classList.remove('hidden');
-        document.getElementById('loader').style.display = 'none';
-        
-        initChart();
-    }
+<div class="cta">
+<button>
+立即開始分析
+</button>
+</div>
 
-    function renderBoard(bazi) {
-        document.getElementById('bazi-board').innerHTML = `
-            <div class="bazi-grid">
-                ${['時柱', '日柱', '月柱', '年柱'].map(h => `<div class="cell" style="background:#1e293b">${h}</div>`).join('')}
-                ${[bazi.getTimeGan(), bazi.getDayGan(), bazi.getMonthGan(), bazi.getYearGan()].map(g => `<div class="cell" style="color:#60a5fa">${g}</div>`).join('')}
-                ${[bazi.getTimeZhi(), bazi.getDayZhi(), bazi.getMonthZhi(), bazi.getYearZhi()].map(z => `<div class="cell" style="color:#f97316">${z}</div>`).join('')}
-            </div>
-        `;
-    }
+</section>
 
-    function renderAIReport(bazi) {
-        document.getElementById('ai-report').innerHTML = `
-            <h3>綜合戰略建議</h3>
-            <p>日主為 <strong>${bazi.getDayGan()}</strong>，結合五行能量分析，建議今年採取保守經營策略，利用貴人運化解七殺壓力。</p>
-        `;
-    }
+<section class="section">
 
-    function initChart() {
-        new Chart(document.getElementById('wuxingChart'), {
-            type: 'radar',
-            data: {
-                labels: ['金', '木', '水', '火', '土'],
-                datasets: [{ data: [20, 20, 20, 20, 20], borderColor: '#f59e0b' }]
-            }
-        });
-    }
-</script>
+<h2 class="section-title">
+六大核心模組
+</h2>
+
+<div class="grid">
+
+<div class="card">
+<h3>📊</h3>
+<p>戰略儀表板</p>
+</div>
+
+<div class="card">
+<h3>☯️</h3>
+<p>八字分析</p>
+</div>
+
+<div class="card">
+<h3>✨</h3>
+<p>紫微斗數</p>
+</div>
+
+<div class="card">
+<h3>🌳</h3>
+<p>五行能量中心</p>
+</div>
+
+<div class="card">
+<h3>📅</h3>
+<p>大運流年中心</p>
+</div>
+
+<div class="card">
+<h3>🤖</h3>
+<p>AI命理師</p>
+</div>
+
+</div>
+
+</section>
+
+<section class="section">
+
+<h2 class="section-title">
+分析流程
+</h2>
+
+<div class="grid">
+
+<div class="card">
+輸入出生資料
+</div>
+
+<div class="card">
+八字排盤
+</div>
+
+<div class="card">
+紫微斗數
+</div>
+
+<div class="card">
+AI分析
+</div>
+
+<div class="card">
+專業命理報告
+</div>
+
+</div>
+
+</section>
+
+<div class="footer">
+
+智算矩陣™<br>
+
+AI Strategic Destiny Matrix
+
+<br><br>
+
+將人生變數，轉化為精準的戰略數據。
+
+</div>
+
 </body>
 </html>
