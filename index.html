@@ -1,219 +1,127 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>智算矩陣™ | AI Strategic Destiny Matrix</title>
-
-<style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
-
-body{
-background:linear-gradient(180deg,#0b1220,#111827);
-color:white;
-font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-}
-
-.hero{
-padding:80px 20px;
-text-align:center;
-}
-
-.logo{
-font-size:42px;
-font-weight:bold;
-color:#fbbf24;
-text-shadow:0 0 20px rgba(251,191,36,.6);
-}
-
-.subtitle{
-margin-top:15px;
-font-size:20px;
-color:#cbd5e1;
-}
-
-.slogan{
-margin-top:20px;
-font-size:18px;
-line-height:1.8;
-color:#f8fafc;
-}
-
-.cta{
-margin-top:40px;
-}
-
-.cta button{
-background:#fbbf24;
-color:#111827;
-border:none;
-padding:15px 35px;
-font-size:18px;
-font-weight:bold;
-border-radius:12px;
-cursor:pointer;
-}
-
-.section{
-padding:30px 15px;
-}
-
-.section-title{
-text-align:center;
-font-size:28px;
-color:#fbbf24;
-margin-bottom:20px;
-}
-
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-gap:15px;
-}
-
-.card{
-background:#1e293b;
-padding:20px;
-border-radius:15px;
-text-align:center;
-border:1px solid #334155;
-}
-
-.card h3{
-margin-bottom:10px;
-color:#fbbf24;
-}
-
-.card p{
-font-size:14px;
-color:#cbd5e1;
-}
-
-.footer{
-padding:40px 20px;
-text-align:center;
-color:#94a3b8;
-}
-
-</style>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智算矩陣 - 現代時空戰略系統</title>
+    
+    <link rel="stylesheet" href="style.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lunar-javascript/1.6.12/lunar.js"></script>
 </head>
 <body>
 
-<section class="hero">
+<div class="container">
+    <div class="main-title">智算矩陣</div>
+    <div class="subtitle">TIME-SPACE STRATEGIC MATRIX ENGINE</div>
 
-<div class="logo">
-智算矩陣™
+    <div class="card">
+        <div class="form-group">
+            <label for="birthDatetime">時空交會維度坐標 (請選擇西元出生年月日時)</label>
+            <input type="datetime-local" id="birthDatetime" class="form-control" value="1995-07-18T14:30">
+        </div>
+        <button class="btn-submit" onclick="runTripleEngine()">多維度演算・同步聚焦</button>
+    </div>
+
+    <div id="resultArea" class="result-container">
+        
+        <div class="card">
+            <div class="section-tag">Matrix Parameters</div>
+            <h2 class="section-title">📊 矩陣運算核心解碼</h2>
+            <div class="grid-3col">
+                <div class="col-card bazi">
+                    <div class="col-title">天賦日主元神</div>
+                    <div class="col-value" id="val-bazi-ri">-</div>
+                </div>
+                <div class="col-card ziwei">
+                    <div class="col-title">本命核心宮位</div>
+                    <div class="col-value" id="val-ziwei-main">-</div>
+                </div>
+                <div class="col-card qimen">
+                    <div class="col-title">戰略引導值符</div>
+                    <div class="col-value" id="val-qimen-fu">-</div>
+                </div>
+            </div>
+            <div class="grid-3col">
+                <div class="col-card bazi">
+                    <div class="col-title">主導月令格局</div>
+                    <div class="col-value" id="val-bazi-ge">-</div>
+                </div>
+                <div class="col-card ziwei">
+                    <div class="col-title">動能關鍵主星</div>
+                    <div class="col-value" id="val-ziwei-body">-</div>
+                </div>
+                <div class="col-card qimen">
+                    <div class="col-title">執行路徑值使</div>
+                    <div class="col-value" id="val-qimen-shi">-</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="section-tag">DIMENSION I</div>
+            <h2 class="section-title">🟢 八字能量：先天硬體設定</h2>
+            <div class="section-desc">分析底層心性特質與五行能量結構，這是你生來被賦予的原廠配備與潛能密碼。</div>
+            <div class="radar-box"><canvas id="radarBazi" width="240" height="240"></canvas></div>
+            <div class="verify-conclusion" id="bazi-case-txt">-</div>
+        </div>
+
+        <div class="card">
+            <div class="section-tag">DIMENSION II</div>
+            <h2 class="section-title">🟣 紫微星曜：人生劇情軌道</h2>
+            <div class="section-desc">透過宮位與星曜鏈接具體環境，推演財富流動、職涯際遇以及人生中面臨的考驗。</div>
+            <div class="radar-box"><canvas id="radarZiwei" width="240" height="240"></canvas></div>
+            <div class="verify-conclusion" id="ziwei-case-txt">-</div>
+        </div>
+
+        <div class="card">
+            <div class="section-tag">DIMENSION III</div>
+            <h2 class="section-title">🟡 奇門局象：當前戰術導航</h2>
+            <div class="section-desc">精準捕捉外部時空機遇，指引當下在什麼時間、往什麼方位行動能將勝率最大化。</div>
+            <div class="radar-box"><canvas id="radarQimen" width="240" height="240"></canvas></div>
+            <div class="verify-conclusion" id="qimen-case-txt">-</div>
+        </div>
+
+        <div class="card">
+            <div class="section-tag">MATRIX CROSS VERIFICATION</div>
+            <h2 class="section-title">⚡ 智算矩陣多維度交叉驗證</h2>
+            <div class="verify-item">
+                <div class="verify-header"><span class="verify-number">1</span> 心性特質驗證</div>
+                <div class="verify-stars" id="v-stars-1">-</div>
+                <div class="verify-conclusion" id="v-con-1">具備高度的戰略思考與破局潛力，想法前衛且執行力不俗。</div>
+            </div>
+            <div class="verify-item">
+                <div class="verify-header"><span class="verify-number">2</span> 財富資產驗證</div>
+                <div class="verify-stars" id="v-stars-2">財星能量 × 財帛宮位 × 生門落旺</div>
+                <div class="verify-conclusion" id="v-con-2">多管道變現模式被催動，適合開拓副業、操作高客單價或智慧財產項目。</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="section-tag">STRATEGIC ACTION</div>
+            <h2 class="section-title">🗺️ 先天局象與當季時空佈局指南</h2>
+            <p style="margin:0; font-size:14px; color:#f59e0b; font-weight:bold;">【天時機遇】（九星磁場引導）：</p>
+            <div class="strategy-block"><p>能量處於上升期，利於內容輸出、個人IP展示與公眾宣傳，影響力正被放大。</p></div>
+            <br>
+            <p style="margin:0; font-size:14px; color:#10b981; font-weight:bold;">【地利方位】（空間能量落點）：</p>
+            <div class="strategy-block"><p>聚焦東南方或正東方。多在此方位辦公、洽談合作，能有效接引貴人磁場。</p></div>
+
+            <div class="rules-box">
+                <div style="font-size:15px; font-weight:700; color:#fff; margin-bottom:12px;">📌 核心推演：請牢記這三件事</div>
+                <div class="rule-line"><div class="rule-num">1</div><div><strong>不急著要結果：</strong> 目前處於矩陣佈局與基建期，需靜待勢能累積。</div></div>
+                <div class="rule-line"><div class="rule-num">2</div><div><strong>不追求完美：</strong> 先完成，再優化。先行動，反饋的數據訊號才會增加。</div></div>
+            </div>
+        </div>
+
+        <div class="footer-banner">智算矩陣 ｜ 洞察時空代碼 ｜ 翻譯成人人看懂的人生策略</div>
+    </div>
 </div>
 
-<div class="subtitle">
-AI Strategic Destiny Matrix
-</div>
-
-<div class="slogan">
-將人生變數，<br>
-轉化為精準的戰略數據。
-</div>
-
-<div class="cta">
-<button>
-立即開始分析
-</button>
-</div>
-
-</section>
-
-<section class="section">
-
-<h2 class="section-title">
-六大核心模組
-</h2>
-
-<div class="grid">
-
-<div class="card">
-<h3>📊</h3>
-<p>戰略儀表板</p>
-</div>
-
-<div class="card">
-<h3>☯️</h3>
-<p>八字分析</p>
-</div>
-
-<div class="card">
-<h3>✨</h3>
-<p>紫微斗數</p>
-</div>
-
-<div class="card">
-<h3>🌳</h3>
-<p>五行能量中心</p>
-</div>
-
-<div class="card">
-<h3>📅</h3>
-<p>大運流年中心</p>
-</div>
-
-<div class="card">
-<h3>🤖</h3>
-<p>AI命理師</p>
-</div>
-
-</div>
-
-</section>
-
-<section class="section">
-
-<h2 class="section-title">
-分析流程
-</h2>
-
-<div class="grid">
-
-<div class="card">
-輸入出生資料
-</div>
-
-<div class="card">
-八字排盤
-</div>
-
-<div class="card">
-紫微斗數
-</div>
-
-<div class="card">
-AI分析
-</div>
-
-<div class="card">
-專業命理報告
-</div>
-
-</div>
-
-</section>
-
-<div class="footer">
-
-智算矩陣™<br>
-
-AI Strategic Destiny Matrix
-
-<br><br>
-
-將人生變數，轉化為精準的戰略數據。
-
-</div>
+<script src="data.js"></script>
+<script src="bazi.js"></script>
+<script src="ziwei.js"></script>
+<script src="ai-report.js"></script>
+<script src="app.js"></script>
 
 </body>
 </html>
