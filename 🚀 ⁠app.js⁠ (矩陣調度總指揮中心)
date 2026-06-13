@@ -1,0 +1,24 @@
+// 負責監聽按鈕、讀取輸入、調度各個 JS 模組進行運算
+function runTripleEngine() {
+    const datetimeVal = document.getElementById('birthDatetime').value;
+    if (!datetimeVal) { alert("請選擇時空交會坐標！"); return; }
+
+    const date = new Date(datetimeVal);
+    const solar = Solar.fromYmdHms(date.getFullYear(), date.getMonth() + 1, date.getDate(), date.getHours(), date.getMinutes(), 0);
+    const lunar = Lunar.fromSolar(solar);
+
+    // 顯示結果大容器
+    document.getElementById('resultArea').style.display = 'block';
+
+    // 1. 驅動八字模組
+    calculateBaziCore(lunar, date);
+
+    // 2. 驅動紫微模組
+    const ziweiMain = calculateZiweiCore(date);
+
+    // 3. 驅動奇門與整合報告模組
+    calculateQimenAndReport(date, lunar, ziweiMain);
+
+    // 平滑捲動
+    document.getElementById('resultArea').scrollIntoView({ behavior: 'smooth' });
+}
