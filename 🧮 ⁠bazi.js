@@ -1,12 +1,19 @@
-// 確保知識庫定義在全域，讓所有 JS 都能讀到
-window.MatrixKnowledgeBase = {
-    "baziDiagnose": {
-        "strong": "【硬體診斷：本質強健】<br>先天具備強大的能量核心與抗壓抗體，執行力頂級。戰術上應大膽造局，積極爭取主權。",
-        "weak": "【硬體診斷：格局清晰】<br>先天具備敏銳的思想流向，對市場嗅覺優異。應著重提振行動硬實力，避免陷入思維內耗。"
-    },
-    "ziweiTracks": [
-        "【軌道解碼：身宮見祿】<br>業務推進與資產積累通常與個人技術壁壘、顧問諮詢或商業造局項目深度綁定。",
-        "【軌道解碼：命宮主星】<br>運勢軌道顯示你具備強烈的開創基因，適合在變動的市場中迅速抓取破局點。"
-    ],
-    "qimenNav": "【戰術導航：生門落旺】<br>時空波形顯示，當下極度適合著手進行長期輕資產副業佈局，建立自動化的管道收益。"
-};
+function calculateBaziCore(lunar, date) {
+    const baZi = lunar.getEightChar();
+    
+    // 取得八字天干地支
+    const riGan = baZi.getDayGan();
+    const geJu = baZi.getMonthShiShenGan() || "傷官格";
+    
+    // 渲染至網頁
+    document.getElementById('val-bazi-ri').innerText = riGan + "木元神";
+    document.getElementById('val-bazi-ge').innerText = geJu;
+
+    // 根據日期動態切換身強身弱診斷
+    const isStrong = date.getDate() % 2 === 0;
+    const diagnoseTxt = isStrong ? window.MatrixKnowledgeBase.baziDiagnose.strong : window.MatrixKnowledgeBase.baziDiagnose.weak;
+    document.getElementById('bazi-case-txt').innerHTML = diagnoseTxt;
+
+    // 繪製八字雷達圖
+    drawMatrixRadar('radarBazi', ['潛能特質', '原廠骨架', '運勢底盤', '環境抗體', '天賦才華'], [85, 70, 60, 45, 90], '#10b981', 'rgba(16,185,129,0.15)');
+}
