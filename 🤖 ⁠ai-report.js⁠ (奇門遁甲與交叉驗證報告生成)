@@ -1,0 +1,75 @@
+// 處理奇門遁甲與最終多維度報告生成
+function calculateQimenAndReport(date, lunar, ziweiMain) {
+    const baZi = lunar.getEightChar();
+    
+    const qimenFu = ["天英星/值符", "天芮星/值符", "天沖星/值符", "天心星/值符"];
+    const qimenShi = ["景門/值使", "生門/值使", "開門/值使", "杜門/值使"];
+    
+    document.getElementById('val-qimen-fu').innerText = qimenFu[date.getHours() % qimenFu.length];
+    document.getElementById('val-qimen-shi').innerText = qimenShi[date.getDate() % qimenShi.length];
+
+    document.getElementById('qimen-case-txt').innerHTML = MatrixKnowledgeBase.qimenNav;
+
+    // 繪製奇門雷達
+    drawMatrixRadar('radarQimen', ['時空時機', '戰略方位', '天時貴人', '精準決策', '突破破局'], [90, 80, 65, 85, 50], '#f59e0b', 'rgba(245,158,11,0.15)');
+
+    // 交叉驗證
+    document.getElementById('v-stars-1').innerText = `先天格局 × 紫微${ziweiMain.split('')[0]} × 奇門能量`;
+}
+
+// 封裝通用 Canvas 雷達引擎
+function drawMatrixRadar(canvasId, labels, dataValues, strokeColor, fillColor) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2;
+    const radius = 80;
+    const numSides = 5;
+
+    // 畫網格
+    ctx.strokeStyle = '#1e293b';
+    ctx.lineWidth = 1;
+    for(let j=1; j<=4; j++) {
+        let r = radius * (j/4);
+        ctx.beginPath();
+        for(let i=0; i<numSides; i++) {
+            let angle = (i * 2 * Math.PI / numSides) - Math.PI/2;
+            let x = cx + r * Math.cos(angle);
+            let y = cy + r * Math.sin(angle);
+            if(i===0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        ctx.stroke();
+    }
+
+    // 畫數據
+    ctx.beginPath();
+    for(let i=0; i<numSides; i++) {
+        let angle = (i * 2 * Math.PI / numSides) - Math.PI/2;
+        let valRatio = dataValues[i] / 100;
+        let x = cx + (radius * valRatio) * Math.cos(angle);
+        let y = cy + (radius * valRatio) * Math.sin(angle);
+        if(i===0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.fillStyle = fillColor;
+    ctx.fill();
+    ctx.strokeStyle = strokeColor;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // 寫標籤
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = '11px sans-serif';
+    ctx.textBaseline = 'middle';
+    ctx.textAlign = 'center';
+    for(let i=0; i<numSides; i++) {
+        let angle = (i * 2 * Math.PI / numSides) - Math.PI/2;
+        let x = cx + (radius + 18) * Math.cos(angle);
+        let y = cy + (radius + 12) * Math.sin(angle);
+        ctx.fillText(labels[i], x, y);
+    }
+}
