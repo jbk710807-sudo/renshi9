@@ -1,24 +1,32 @@
-// 負責監聽按鈕、讀取輸入、調度各個 JS 模組進行運算
 function runTripleEngine() {
     const datetimeVal = document.getElementById('birthDatetime').value;
-    if (!datetimeVal) { alert("請選擇時空交會坐標！"); return; }
+    if (!datetimeVal) { 
+        alert("請選擇時空交會坐標！"); 
+        return; 
+    }
 
+    // 1. 解析日期時間
     const date = new Date(datetimeVal);
-    const solar = Solar.fromYmdHms(date.getFullYear(), date.getMonth() + 1, date.getDate(), date.getHours(), date.getMinutes(), 0);
+    
+    // 2. 驅動萬年曆組件
+    const solar = Solar.fromYmdHms(
+        date.getFullYear(), 
+        date.getMonth() + 1, 
+        date.getDate(), 
+        date.getHours(), 
+        date.getMinutes(), 
+        0
+    );
     const lunar = Lunar.fromSolar(solar);
 
-    // 顯示結果大容器
+    // 3. 打開隱藏的結果面板塊
     document.getElementById('resultArea').style.display = 'block';
 
-    // 1. 驅動八字模組
+    // 4. 依序執行三大核心演算模組 (確保順序與資料傳遞無誤)
     calculateBaziCore(lunar, date);
-
-    // 2. 驅動紫微模組
     const ziweiMain = calculateZiweiCore(date);
-
-    // 3. 驅動奇門與整合報告模組
     calculateQimenAndReport(date, lunar, ziweiMain);
 
-    // 平滑捲動
+    // 5. 滑順滾動到結果頁面
     document.getElementById('resultArea').scrollIntoView({ behavior: 'smooth' });
 }
