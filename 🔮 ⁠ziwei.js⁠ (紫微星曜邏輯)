@@ -1,0 +1,16 @@
+// 處理紫微斗數邏輯
+function calculateZiweiCore(date) {
+    const ziweiStars = ["天機太陰", "紫微七殺", "太陽巨門", "武曲貪狼", "天府獨坐"];
+    const randomZiwei = ziweiStars[date.getDate() % ziweiStars.length];
+    
+    document.getElementById('val-ziwei-main').innerText = randomZiwei;
+    document.getElementById('val-ziwei-body').innerText = "財帛宮化祿";
+
+    // 從 data.js 取出對應文案
+    document.getElementById('ziwei-case-txt').innerHTML = MatrixKnowledgeBase.ziweiTracks[date.getDate() % 2];
+
+    // 繪製紫微雷達
+    drawMatrixRadar('radarZiwei', ['財富獲取', '事業格局', '社交互動', '能量禦防', '精神福德'], [75, 85, 40, 55, 70], '#8b5cf6', 'rgba(139,92,246,0.15)');
+    
+    return randomZiwei;
+}
